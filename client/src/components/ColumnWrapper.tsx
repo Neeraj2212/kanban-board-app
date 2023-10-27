@@ -15,6 +15,8 @@ export default function ColumnWrapper(props: ColumnWrapperProps) {
   const { updateColumnTitle, deleteColumn, addTask, tasks } =
     useContext(KanbanBoardContext);
 
+  const columnTasks = tasks.filter((task) => task.columnId === column.id);
+
   return (
     <div className="bg-secondary rounded-md flex flex-col max-h-[600px] h-[600px] w-[350px]">
       {/* Column title */}
@@ -30,7 +32,7 @@ export default function ColumnWrapper(props: ColumnWrapperProps) {
             className="flex justify-center items-center bg-secondary
             px-2 py-1 text-sm rounded-full"
           >
-            0
+            {columnTasks.length}
           </div>
           {!editMode && column.title}
           {editMode && (
@@ -62,11 +64,9 @@ export default function ColumnWrapper(props: ColumnWrapperProps) {
 
       {/* Column tasks */}
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
-        {tasks
-          .filter((task) => task.columnId === column.id)
-          .map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
+        {columnTasks.map((task) => (
+          <TaskCard key={task.id} task={task} />
+        ))}
       </div>
 
       {/* Add task */}

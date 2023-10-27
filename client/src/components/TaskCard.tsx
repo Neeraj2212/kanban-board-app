@@ -55,10 +55,6 @@ export default function TaskCard(props: TaskCardProps) {
           onBlur={() => {
             toggleEditMode();
           }}
-          onKeyDown={(e) => {
-            if (e.key !== "Enter") return;
-            toggleEditMode();
-          }}
         />
       )}
     </div>

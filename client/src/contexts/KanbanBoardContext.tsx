@@ -67,7 +67,7 @@ export const KanbanBoardProvider: React.FC<{ children: React.ReactNode }> = ({
     const newTask: Task = {
       columnId,
       id: uuidv4(),
-      content: `Task ${tasks.length + 1}`,
+      content: `New Task`,
     };
     setTasks([...tasks, newTask]);
   };
