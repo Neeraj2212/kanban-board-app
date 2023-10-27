@@ -1,6 +1,8 @@
+import { useSortable } from "@dnd-kit/sortable";
 import { KanbanBoardContext } from "@src/contexts/KanbanBoardContext";
 import { Task } from "@src/types";
 import { useContext, useState } from "react";
+import { CSS } from "@dnd-kit/utilities";
 
 interface TaskCardProps {
   task: Task;
@@ -12,9 +14,41 @@ export default function TaskCard(props: TaskCardProps) {
 
   const { deleteTask, updateTaskContent } = useContext(KanbanBoardContext);
 
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id.toString(),
+    disabled: editMode,
+    data: {
+      type: "task",
+      task: task,
+    },
+  });
+
   const toggleEditMode = () => {
     setEditMode((prev: boolean) => !prev);
   };
+
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
+
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="opacity-30 bg-mainBackgroundColor p-2.5 h-[50px] min-h-[50px] items-center flex 
+        text-left rounded-xl border-2 border-rose-500 cursor-grab relative"
+      />
+    );
+  }
 
   return (
     <div
@@ -22,6 +56,10 @@ export default function TaskCard(props: TaskCardProps) {
     flex text-left rounded-md hover:ring-2 hover:ring-inset hover:ring-rose-500 gap-2
     cursor-grab relative ${editMode ? "" : "task"}`}
       onClick={() => !editMode && toggleEditMode()}
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
     >
       {/* Task Checkbox */}
       <div className="flex items-center h-full ">
