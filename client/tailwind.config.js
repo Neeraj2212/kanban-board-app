@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        mainBackground: "#0D1117",
-        columnBackground: "#161C22",
+        mainBackground: "#7fc8f8",
+        columnBackground: "#f2eef1",
       }
     },
   },
