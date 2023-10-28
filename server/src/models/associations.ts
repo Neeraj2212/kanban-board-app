@@ -9,30 +9,31 @@ export const setupAssociations = () => {
     as: 'columns',
   });
 
-  // UserModel.hasMany(TaskModel, {
-  //   sourceKey: 'id',
-  //   foreignKey: 'userId',
-  //   as: 'tasks',
-  // });
+  UserModel.hasMany(TaskModel, {
+    sourceKey: 'id',
+    foreignKey: 'userId',
+    as: 'tasks',
+  });
 
   ColumnModel.belongsTo(UserModel, {
     foreignKey: 'userId',
     as: 'user',
   });
 
-  // ColumnModel.hasMany(TaskModel, {
-  //   sourceKey: 'id',
-  //   foreignKey: 'columnId',
-  //   as: 'tasks',
-  // });
+  ColumnModel.hasMany(TaskModel, {
+    sourceKey: 'id',
+    foreignKey: 'columnId',
+    as: 'tasks',
+    onDelete: 'CASCADE',
+  });
 
-  // TaskModel.belongsTo(ColumnModel, {
-  //   foreignKey: 'columnId',
-  //   as: 'column',
-  // });
+  TaskModel.belongsTo(ColumnModel, {
+    foreignKey: 'columnId',
+    as: 'column',
+  });
 
-  // TaskModel.belongsTo(UserModel, {
-  //   foreignKey: 'userId',
-  //   as: 'user',
-  // });
+  TaskModel.belongsTo(UserModel, {
+    foreignKey: 'userId',
+    as: 'user',
+  });
 };

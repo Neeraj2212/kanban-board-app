@@ -33,6 +33,6 @@ TaskModel.init(
   },
 );
 
-TaskModel.sync({ force: true });
+TaskModel.sync();
 
 export default TaskModel;
