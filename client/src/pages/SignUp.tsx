@@ -47,7 +47,7 @@ export default function SignUp() {
     <div className="h-screen min-h-screen signup-page">
       <form
         onSubmit={(e) => handleSignUp(e)}
-        className="grid place-content-center h-screen w-[40vw] min-w-[400px] max-w-[600px]"
+        className="grid place-content-center h-screen w-[40vw] min-w-[400px] max-w-[600px] bg-[#b2beed]"
       >
         <h1 className="mb-5 text-3xl">Sign Up</h1>
         <div className="flex mb-5 flex-col">

@@ -8,6 +8,14 @@ body,
   @apply bg-[#e2e2e2] text-black box-border min-h-screen;
 }
 
+.signup-page,
+.login-page {
+  background-image: url("/kanban-bg.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position-x: right;
+}
+
 ::-webkit-scrollbar {
   width: 4px;
 }

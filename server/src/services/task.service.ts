@@ -37,10 +37,6 @@ export class TaskService {
   public async deleteTask(taskId: string, userId: string) {
     const findTask = await this.tasks.findOne({ where: { id: taskId, userId: userId } });
     if (!findTask) throw new HttpException(404, `This task ${taskId} was not found`);
-
-    // Update position of all the tasks below the task to be deleted
-    await this.tasks.decrement({ position: 1 }, { where: { columnId: findTask.columnId, position: { [Op.gt]: findTask.position } } });
-
     const deleteTaskData = await this.tasks.destroy({ where: { id: taskId } });
     return deleteTaskData;
   }
