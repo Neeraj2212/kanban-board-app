@@ -5,7 +5,7 @@ export class ColumnService {
   public columns = ColumnModel;
 
   public async findAllColumnsOfUser(userId: string) {
-    const findColumns = await this.columns.findAll({ where: { userId: userId }, order: [['createdAt', 'DESC']] });
+    const findColumns = await this.columns.findAll({ where: { userId: userId }, order: [['createdAt', 'ASC']] });
     return findColumns;
   }
 
