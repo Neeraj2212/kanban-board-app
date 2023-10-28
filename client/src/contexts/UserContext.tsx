@@ -1,6 +1,6 @@
 import { User } from "@src/types";
 import axios from "axios";
-import React, { createContext, useLayoutEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import { toast } from "react-toastify";
 
 type UserContextType = {
@@ -21,16 +21,9 @@ export const UserContext = createContext<UserContextType>(initialContext);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | undefined>(undefined);
-
-  useLayoutEffect(() => {
-    // Check if user is already logged in
-    const userString = localStorage.getItem("user");
-    if (userString) {
-      const user = JSON.parse(userString);
-      setUser(user);
-    }
-  }, []);
+  const [user, setUser] = useState<User | undefined>(
+    () => JSON.parse(localStorage.getItem("user")!) || undefined
+  );
 
   const updateUser = (user: User | undefined) => {
     setUser(user);

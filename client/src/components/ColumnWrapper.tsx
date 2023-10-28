@@ -36,10 +36,7 @@ export default function ColumnWrapper(props: ColumnWrapperProps) {
   });
 
   return (
-    <div
-      className="bg-secondary rounded-md flex flex-col max-h-[600px] h-[600px] w-[350px]"
-      ref={setDroppableNodeRef}
-    >
+    <div className="bg-secondary rounded-md flex flex-col max-h-[600px] h-[600px] w-[350px]">
       {/* Column title */}
       <div
         onClick={() => {
@@ -86,7 +83,10 @@ export default function ColumnWrapper(props: ColumnWrapperProps) {
       </div>
 
       {/* Column tasks */}
-      <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+      <div
+        className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto"
+        ref={setDroppableNodeRef}
+      >
         <SortableContext items={columnTaskIds}>
           {columnTasks.map((task) => (
             <TaskCard key={task.id} task={task} />

@@ -10,15 +10,30 @@ import {
 import AddIcon from "@icons/AddIcon";
 import { KanbanBoardContext } from "@src/contexts/KanbanBoardContext";
 import { Task } from "@src/types";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import ColumnWrapper from "./ColumnWrapper";
 import TaskCard from "./TaskCard";
 
 export default function KanbanBoard() {
-  const { columns, addColumn, addTaskOverNewColumn, addTaskOverNewTask } =
-    useContext(KanbanBoardContext);
+  const {
+    columns,
+    addColumn,
+    addTaskOverNewColumn,
+    moveTask,
+    addTaskOverNewTask,
+  } = useContext(KanbanBoardContext);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const initialMoveCoordinates = {
+    sourceTaskColumnId: undefined,
+    destinationTaskColumnId: undefined,
+  };
+
+  const moveCoordinates = useRef<{
+    sourceTaskColumnId: string | undefined;
+    destinationTaskColumnId: string | undefined;
+  }>(initialMoveCoordinates);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -26,10 +41,35 @@ export default function KanbanBoard() {
 
   const onDragStart = (event: DragStartEvent) => {
     if (event.active.data.current?.type !== "task") return;
-    setActiveTask(event.active.data.current.task);
+    const { task } = event.active.data.current;
+    moveCoordinates.current.sourceTaskColumnId = task.columnId;
+    setActiveTask(task);
   };
 
   const onDragEnd = () => {
+    const {
+      sourceTaskColumnId: sourceTaskInitialColumnId,
+      destinationTaskColumnId: destinationTaskInitialColumnId,
+    } = moveCoordinates.current;
+
+    if (
+      sourceTaskInitialColumnId === undefined ||
+      destinationTaskInitialColumnId === undefined
+    )
+      return;
+
+    console.table({
+      sourceTaskInitialColumnId,
+      destinationTaskInitialColumnId,
+    });
+
+    moveTask(
+      activeTask?.id.toString() as string,
+      sourceTaskInitialColumnId,
+      destinationTaskInitialColumnId
+    );
+
+    moveCoordinates.current = initialMoveCoordinates;
     setActiveTask(null);
   };
 
@@ -49,6 +89,8 @@ export default function KanbanBoard() {
 
     // Dropping a Task over another Task
     if (isActiveATask && isOverATask) {
+      moveCoordinates.current.destinationTaskColumnId =
+        over.data.current?.task.columnId;
       return addTaskOverNewTask(activeId.toString(), overId.toString());
     }
 
@@ -56,7 +98,9 @@ export default function KanbanBoard() {
 
     // Dropping a Task over a column
     if (isActiveATask && isOverAColumn) {
-      return addTaskOverNewColumn(activeId.toString(), overId.toString());
+      console.log("Dropping a Task over a column");
+      moveCoordinates.current.destinationTaskColumnId = overId.toString();
+      addTaskOverNewColumn(activeId.toString(), overId.toString());
     }
   };
 

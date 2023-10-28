@@ -25,10 +25,4 @@ export class UpdateTaskPositionDto {
 
   @IsUUID()
   public destinationColumnId: string;
-
-  @IsNumber()
-  public sourcePosition: number;
-
-  @IsNumber()
-  public destinationPosition: number;
 }
