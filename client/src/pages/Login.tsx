@@ -1,19 +1,20 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { UserContext } from "@src/contexts/UserContext";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-// import { UserContext } from "@src/contexts/UserContext";
 
 export default function Login() {
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  //   const { updateUser } = useContext(UserContext);
-  //   const navigate = useNavigate();
+  const { updateUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  // Handle login and redirect to game page
+  // Handle login and redirect to board page
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (userName.length < 3) {
+    if (username.length < 3) {
       toast.error("Username must be at least 3 characters long!");
       return;
     }
@@ -22,27 +23,27 @@ export default function Login() {
       return;
     }
 
-    if (userName.includes(" ")) {
+    if (username.includes(" ")) {
       toast.error("Username cannot contain spaces!");
       return;
     }
 
-    // const response = await axios
-    //   .post("/api/auth/login", {
-    //     userName,
-    //     password,
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error.response.data.message);
-    //   });
+    const response = await axios
+      .post("/api/auth/login", {
+        username,
+        password,
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
 
-    // if (response && response.data) {
-    //   toast.success("Logged in successfully!");
-    //   setUserName("");
-    //   setPassword("");
-    //   updateUser(response.data.data);
-    //   navigate("/game");
-    // }
+    if (response && response.data) {
+      toast.success("Logged in successfully!");
+      setUsername("");
+      setPassword("");
+      updateUser(response.data.data);
+      navigate("/board");
+    }
   };
 
   return (
@@ -58,12 +59,12 @@ export default function Login() {
           </label>
           <input
             type="text"
-            value={userName}
+            value={username}
             className="p-2 text-lg rounded-md border-solid border-gray-300 shadow-sm"
             required
             id="username"
             name="username"
-            onChange={(e) => setUserName(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="flex mb-5 flex-col">

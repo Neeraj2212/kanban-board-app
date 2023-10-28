@@ -10,3 +10,8 @@ export type Task = {
   columnId: Id;
   content: string;
 };
+
+export type User = {
+  id: Id;
+  username: string;
+};

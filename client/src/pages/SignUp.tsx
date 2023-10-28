@@ -1,17 +1,18 @@
+import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function SignUp() {
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Handle sign up and redirect to login page
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (userName.length < 3) {
+    if (username.length < 3) {
       toast.error("Username must be at least 3 characters long!");
       return;
     }
@@ -20,26 +21,26 @@ export default function SignUp() {
       return;
     }
 
-    if (userName.includes(" ")) {
+    if (username.includes(" ")) {
       toast.error("Username cannot contain spaces!");
       return;
     }
 
-    // const response = await axios
-    //   .post("/api/auth/signup", {
-    //     userName,
-    //     password,
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error.response.data.message);
-    //   });
+    const response = await axios
+      .post("/api/auth/signup", {
+        username,
+        password,
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
 
-    // if (response && response.data) {
-    //   toast.success("Account created successfully!");
-    //   setUserName("");
-    //   setPassword("");
-    //   navigate("/login");
-    // }
+    if (response && response.data) {
+      toast.success("Account created successfully!");
+      setUsername("");
+      setPassword("");
+      navigate("/login");
+    }
   };
 
   return (
@@ -55,12 +56,12 @@ export default function SignUp() {
           </label>
           <input
             type="text"
-            value={userName}
+            value={username}
             className="p-2 text-lg rounded-md border-solid border-gray-300 shadow-sm"
             required
             id="username"
             name="username"
-            onChange={(e) => setUserName(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="flex mb-5 flex-col">
