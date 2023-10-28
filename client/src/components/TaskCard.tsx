@@ -10,6 +10,7 @@ interface TaskCardProps {
 
 export default function TaskCard(props: TaskCardProps) {
   const { task } = props;
+  const [taskContent, setTaskContent] = useState(task.content);
   const [editMode, setEditMode] = useState(false);
 
   const { deleteTask, updateTaskContent } = useContext(KanbanBoardContext);
@@ -76,7 +77,7 @@ export default function TaskCard(props: TaskCardProps) {
       {/* Task content */}
       {!editMode && (
         <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
-          {task.content}
+          {taskContent}
         </p>
       )}
 
@@ -84,14 +85,15 @@ export default function TaskCard(props: TaskCardProps) {
       {editMode && (
         <textarea
           className="bg-transparent focus:border-rose-500 border rounded resize-none outline-none px-2 w-full h-[90%]"
-          value={task.content}
+          value={taskContent}
           placeholder="Task Content Here"
           onChange={(e) => {
-            updateTaskContent(task.id, e.target.value);
+            setTaskContent(e.target.value);
           }}
           autoFocus
           onBlur={() => {
             toggleEditMode();
+            updateTaskContent(task.id, taskContent);
           }}
         />
       )}

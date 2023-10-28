@@ -1,8 +1,11 @@
 import { arrayMove } from "@dnd-kit/sortable";
 import { Column, Task } from "@src/types";
-import { createContext } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect } from "react";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { UserContext } from "./UserContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 type KanbanBoardContextType = {
   columns: Column[];
@@ -35,6 +38,34 @@ export const KanbanBoardProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [columns, setColumns] = useState<Column[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const { user } = useContext(UserContext);
+
+  const fetchFromDB = async () => {
+    await Promise.all([
+      axios
+        .get("/api/column")
+        .then((response) => {
+          setColumns(response.data.data);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        }),
+      axios
+        .get("/api/task")
+        .then((response) => {
+          setTasks(response.data.data);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        }),
+    ]);
+  };
+
+  useLayoutEffect(() => {
+    if (user) {
+      fetchFromDB();
+    }
+  }, [user]);
 
   // Column functions
   const addColumn = () => {
@@ -42,6 +73,11 @@ export const KanbanBoardProvider: React.FC<{ children: React.ReactNode }> = ({
       id: uuidv4(),
       title: `Column ${columns.length + 1}`,
     };
+
+    axios.post("/api/column", newColumn).catch((error) => {
+      toast.error(error.response.data.message);
+    });
+
     setColumns([...columns, newColumn]);
   };
 
@@ -49,11 +85,15 @@ export const KanbanBoardProvider: React.FC<{ children: React.ReactNode }> = ({
     const newColumns = columns.filter((column) => column.id !== columnId);
     const newTasks = tasks.filter((task) => task.columnId !== columnId);
 
-    setTasks(newTasks);
     setColumns(newColumns);
+    setTasks(newTasks);
+
+    axios.delete(`/api/column/${columnId}`).catch((error) => {
+      toast.error(error.response.data.message);
+    });
   };
 
-  const updateColumnTitle = (columnId: string, newTitle: string) => {
+  const updateColumnTitle = async (columnId: string, newTitle: string) => {
     const newColumns = columns.map((column) => {
       if (column.id === columnId) {
         return {
@@ -64,15 +104,26 @@ export const KanbanBoardProvider: React.FC<{ children: React.ReactNode }> = ({
         return column;
       }
     });
+
+    axios
+      .put(`/api/column/${columnId}`, {
+        title: newTitle,
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+
     setColumns(newColumns);
   };
 
   // Task functions
   const addTask = (columnId: string) => {
+    const position = tasks.filter((task) => task.columnId === columnId).length;
     const newTask: Task = {
+      position: position,
       columnId,
       id: uuidv4(),
-      content: `Task ${tasks.length + 1}`,
+      content: `Task ${position + 1}`,
     };
     setTasks([...tasks, newTask]);
   };

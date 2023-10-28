@@ -12,6 +12,7 @@ interface ColumnWrapperProps {
 
 export default function ColumnWrapper(props: ColumnWrapperProps) {
   const { column } = props;
+  const [columnTitle, setColumnTitle] = useState(column.title);
   const [editMode, setEditMode] = useState(false);
   const { updateColumnTitle, deleteColumn, addTask, tasks } =
     useContext(KanbanBoardContext);
@@ -58,15 +59,17 @@ export default function ColumnWrapper(props: ColumnWrapperProps) {
           {editMode && (
             <input
               className="bg-transparent focus:border-rose-500 border rounded outline-none px-2"
-              value={column.title}
-              onChange={(e) => updateColumnTitle(column.id, e.target.value)}
+              value={columnTitle}
+              onChange={(e) => setColumnTitle(e.target.value)}
               autoFocus
               onBlur={() => {
                 setEditMode(false);
+                updateColumnTitle(column.id, columnTitle);
               }}
               onKeyDown={(e) => {
                 if (e.key !== "Enter") return;
                 setEditMode(false);
+                updateColumnTitle(column.id, columnTitle);
               }}
             />
           )}
