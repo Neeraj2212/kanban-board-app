@@ -58,11 +58,6 @@ export default function KanbanBoard() {
     )
       return;
 
-    console.table({
-      sourceTaskInitialColumnId,
-      destinationTaskInitialColumnId,
-    });
-
     moveTask(
       activeTask?.id.toString() as string,
       sourceTaskInitialColumnId,
@@ -98,7 +93,6 @@ export default function KanbanBoard() {
 
     // Dropping a Task over a column
     if (isActiveATask && isOverAColumn) {
-      console.log("Dropping a Task over a column");
       moveCoordinates.current.destinationTaskColumnId = overId.toString();
       addTaskOverNewColumn(activeId.toString(), overId.toString());
     }
