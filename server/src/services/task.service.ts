@@ -6,7 +6,7 @@ export class TaskService {
   public tasks = TaskModel;
 
   public async findAllTasksOfUser(userId: string) {
-    const findTasks = await this.tasks.findAll({ where: { userId: userId }, order: [['createdAt', 'ASC']] });
+    const findTasks = await this.tasks.findAll({ where: { userId: userId }, order: [['updatedAt', 'DESC']] });
     return findTasks;
   }
 

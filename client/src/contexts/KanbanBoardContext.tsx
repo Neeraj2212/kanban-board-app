@@ -190,10 +190,10 @@ export const KanbanBoardProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (tasks[activeIndex].columnId !== tasks[overIndex].columnId) {
         tasks[activeIndex].columnId = tasks[overIndex].columnId;
-        return arrayMove(tasks, activeIndex, overIndex - 1);
+        return arrayMove(tasks, activeIndex, 0);
       }
 
-      return arrayMove(tasks, activeIndex, overIndex);
+      return arrayMove(tasks, activeIndex, 0);
     });
   };
 
@@ -202,7 +202,7 @@ export const KanbanBoardProvider: React.FC<{ children: React.ReactNode }> = ({
       const activeIndex = tasks.findIndex((t) => t.id === activeTaskId);
 
       tasks[activeIndex].columnId = overColumnId;
-      return arrayMove(tasks, activeIndex, activeIndex);
+      return arrayMove(tasks, activeIndex, 0);
     });
   };
 
