@@ -1,6 +1,7 @@
 import { db } from '@/databases';
 import { User } from '@interfaces/users.interface';
 import { DataTypes, Model } from 'sequelize';
+import ColumnModel from './columns.model';
 
 class UserModel extends Model<User, User> {
   public declare id: string;

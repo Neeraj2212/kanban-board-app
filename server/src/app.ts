@@ -9,6 +9,7 @@ import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
+import { setupAssociations } from './models/associations';
 
 class App {
   public app: express.Application;
@@ -39,17 +40,15 @@ class App {
     return this.app;
   }
 
-  private connectToDatabase() {
-    db.authenticate()
-      .then(() => {
-        console.log('Database connected');
-      })
-      .catch(err => {
-        console.log('Unable to connect to the database:', err);
-      });
+  private async connectToDatabase() {
+    setupAssociations();
+    try {
+      await db.authenticate();
+      console.log('Database connected');
+    } catch (error) {
+      console.log('Unable to connect to the database:', error);
+    }
   }
-  cd;
-
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT));
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
